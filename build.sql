@@ -49,3 +49,9 @@ CREATE TABLE invoice_totals (
   total_amount
 )
 ;
+
+CREATE TABLE payments();
+CREATE TABLE payments_items();
+CREATE TABLE payment_methods();
+CREATE TABLE pm_1_transactions();
+CREATE TABLE pm_1_transactions_history();
