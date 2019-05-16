@@ -3,7 +3,7 @@ CREATE DATABASE invoicing;
 CREATE TABLE invoicing.invoice (
   id INT(9) UNSIGNED NOT NULL AUTO_INCREMENT,
   invoice_id INT(11) UNSIGNED NOT NULL,
-  invoice_date DATE DEFAULT CURRENT_DATE,
+  invoice_date DATE DEFAULT current_timestamp,
   issuer_id INT(9) NOT NULL,
   receiver_id INT(9) NOT NULL,
   currecny_id INT(3) NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE invoicing.invoice (
 -- issuer, receiver: customer/ supplier. to link to own DB. out of project scope
 
 CREATE TABLE invoicing.currencies (
-  currecny_id INT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
+  ii_id INT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
   symbol CHAR(3),
   description VARChar(32),
   PRIMARY KEY currecny_id (currecny_id),
@@ -31,12 +31,12 @@ CREATE TABLE invoicing.currencies (
 ;
 
 CREATE TABLE invoicing.invoice_items (
-  ii_id UNSIGNED NOT NULL AUTO_INCREMENT,
+  ii_id INT(9) UNSIGNED NOT NULL AUTO_INCREMENT,
   invoice_id INT(9) UNSIGNED NOT NULL,
   product_id INT(9) UNSIGNED NOT NULL,
   product_count INT(5) UNSIGNED NOT NULL,
   product_price FLOAT(9,2) NOT NULL,
-  subtotal FLOAT(9,2) NOT NULL,
+  subtotal FLOAT(9,2) NOT NULL
   
 )
 ;
@@ -50,25 +50,44 @@ CREATE TABLE products (
 
 
 CREATE TABLE invoice_totals_types (
-  iitt_id,
-  `iitt_name` VARCHAR(32) -- item_total, item_vat, invoice_total, invoice_vat, invoice_total_vat
-)
-
-CREATE TABLE invoice_totals (
-  it_id,
-  invoice_id,
-  total_type_id,
-  total_amount
+  iitt_id INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `iitt_name` VARCHAR(32), -- ('item_total'), ('item_vat'), ('invoice_total'), ('invoice_vat'), ('invoice_total_vat')
+  PRIMARY KEY iitt_id (iitt_id)
 )
 ;
 
-CREATE TABLE payments();
-CREATE TABLE payments_items();
-CREATE TABLE payment_methods();
-CREATE TABLE pm_1_transactions();
-CREATE TABLE pm_1_transactions_history();
+CREATE TABLE invoice_totals (
+  it_id INT(9) UNSIGNED NOT NULL AUTO_INCREMENT,
+  invoice_id INT(9) UNSIGNED NOT NULL,
+  total_type_id INT(4) UNSIGNED NOT NULL,
+  total_amount DECIMAL(9,2) NOT NULL,
+  PRIMARY KEY it_id (it_id),
+  KEY invoice_id (invoice_id),
+  KEY total_type_id (total_type_id)
+)
+;
 
+CREATE TABLE payments(
+	payment_id INT(9) UNSIGNED NOT NULL AUTO_INCREMENT,
+    payment_datetime DATETIME NOT NULL DEFAULT current_timestamp,
+    payment_method_id INT(3),
+	total_amount DECIMAL(9,2) NOT NULL,   
+);
+CREATE TABLE payments_items(
+	pi_id INT(9) UNSIGNED NOT NULL AUTO_INCREMENT,
+	payment_id INT(9) UNSIGNED NOT NULL,
+    total_amount DECIMAL(9,2) NOT NULL,
+);
+CREATE TABLE payment_methods (
+	payment_method_id INT(3),
+    payment_method_name VARCHAR(16)
+);
+CREATE TABLE pm_transactions( 
+);
+CREATE TABLE pm_transactions_history(
+);
 
+INSERT INTO invoicing.invoice_totals_types (iitt_name) VALUES ('item_total'), ('item_vat'), ('invoice_total'), ('invoice_vat'), ('invoice_total_vat');
 
 INSERT INTO invoicing.currencies (symbol) VALUES
 ('AED','United Arab Emirates, Dirhams'),
