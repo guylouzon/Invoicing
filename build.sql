@@ -70,25 +70,49 @@ CREATE TABLE invoice_totals (
 ;
 
 CREATE TABLE payments(
-  payment_id INT(9) UNSIGNED NOT NULL AUTO_INCREMENT,
+	payment_id INT(9) UNSIGNED NOT NULL AUTO_INCREMENT,
     payment_datetime TIMESTAMP NOT NULL DEFAULT current_timestamp,
-    payment_method_id INT(3),
-  total_amount DECIMAL(9,2) NOT NULL,
-  PRIMARY KEY payment_id (payment_id)
+	payer_id INT(9) NOT NULL,
+	receiver_id INT(9) NOT NULL,
+	pm_id INT(3),
+	currency_id INT(3),
+	total_amount DECIMAL(9,2) NOT NULL,
+	PRIMARY KEY payment_id (payment_id)
 );
+/*
 CREATE TABLE payments_items(
 	pi_id INT(9) UNSIGNED NOT NULL AUTO_INCREMENT,
 	payment_id INT(9) UNSIGNED NOT NULL,
     total_amount DECIMAL(9,2) NOT NULL,
 );
+*/
 CREATE TABLE payment_methods (
 	payment_method_id INT(3),
     payment_method_name VARCHAR(16)
 );
-CREATE TABLE pm_transactions( 
+CREATE TABLE pm_transactions(
+	tran_id,
+	payment_id,
+	tran_identifier_type VARCHAR, -- voucher, token, trankey
+	tran_value VARCHAR, -- a numeric or an alphanumeric code
+	tran_amount
 );
+
 CREATE TABLE pm_transactions_history(
+	history_id,
+	tran_id,
+	date,
+	status_type,
+	status_value
 );
+
+CREATE TABLE invoices_payments(
+	ip_id,
+	invoice_id,
+	payment_id,
+	payment_cover_ratio DECIMAL(9,2) DEFAULT 1.00
+);
+
 
 INSERT INTO invoicing.invoice_totals_types (iitt_name) VALUES ('item_total'), ('item_vat'), ('invoice_total'), ('invoice_vat'), ('invoice_total_vat');
 
