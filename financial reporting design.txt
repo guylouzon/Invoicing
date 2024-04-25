@@ -1,0 +1,23 @@
+tables
+pnl records
+id, name, tag_id, period_from_id, period_to_id, amount, currency_id
+
+balance records
+id, name, tag_id, period_id
+
+tags
+id, name, type
+
+tag_types
+id, name
+
+periods
+id, date, quarter, weekday, month, monthday, year, weekofyear
+
+currencies
+id, symbol
+
+currencies_exchanges
+id, currency_id, ex_currency_id, rate, period_id
+
+-- gross revenue, cogs opex
